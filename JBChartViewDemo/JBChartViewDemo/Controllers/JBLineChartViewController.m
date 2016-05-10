@@ -301,6 +301,26 @@ NSString * const kJBLineChartViewControllerNavButtonViewKey = @"view";
 	return (lineIndex == JBLineChartLineSolid) ? JBLineChartViewColorStyleSolid : JBLineChartViewColorStyleGradient;
 }
 
+- (CGFloat)lineChartView:(JBLineChartView *)lineChartView percentualSpacingBetweenPointsAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex {
+    NSArray *percentualSpacings = @[@(0.0), @(0.1), @(0.1), @(0.1), @(0.2), @(0.4), @(0.1)];
+    return [percentualSpacings[horizontalIndex] floatValue];
+}
+
+- (BOOL)lineChartView:(JBLineChartView *)lineChartView shouldShowVerticalLineAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex {
+    if (lineIndex == 0) {
+        return YES;
+    }
+    return NO;
+}
+
+- (CGFloat)lineChartView:(JBLineChartView *)lineChartView widthOfVerticalLineAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex {
+    return 2;
+}
+
+- (UIColor *)lineChartView:(JBLineChartView *)lineChartView colorForVerticalLineAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex {
+    return [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+}
+
 #pragma mark - Buttons
 
 - (void)chartToggleButtonPressed:(id)sender

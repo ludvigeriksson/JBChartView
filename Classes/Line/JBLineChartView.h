@@ -442,6 +442,71 @@ typedef NS_ENUM(NSInteger, JBLineChartViewColorStyle) {
  */
 - (JBLineChartViewColorStyle)lineChartView:(JBLineChartView *)lineChartView fillColorStyleForLineAtLineIndex:(NSUInteger)lineIndex;
 
+
+
+
+/* ------------------------------------------------------- */
+/* Addidions to JBLineChartViewDelegate by Ludvig Eriksson */
+/* ------------------------------------------------------- */
+
+/**
+ *  Returns the horizontal spacing between two points as a percentage of the width of the chart view.
+ *  
+ *  Default: All points are evenly spaced.
+ *
+ *  @param lineChartView    The line chart object requesting this information.
+ *  @param horizontalIndex  The 0-based horizontal index of a selection point (left to right, x-axis).
+ *  @param lineIndex        An index number identifying a line in the chart.
+ *
+ *  @return The percentual spacing between the two points in the chart.
+ */
+- (CGFloat)lineChartView:(JBLineChartView *)lineChartView percentualSpacingBetweenPointsAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex;
+
+/**
+ *  Returns whether a vertical line should be drawn for a certain point of a certain line.
+ *  If multiple lines have the same horizontal spacing you might only want to return YES from this for one line,
+ *  otherwise multiple vertical lines will be drawn on top of each other.
+ *
+ *  Default: NO
+ *
+ *  @param lineChartView    The line chart object requesting this information.
+ *  @param horizontalIndex  The 0-based horizontal index of a selection point (left to right, x-axis).
+ *  @param lineIndex        An index number identifying a line in the chart.
+ *
+ *  @return Returns whether a vertical line should be drawn for this horizontal index of this line.
+ */
+- (BOOL)lineChartView:(JBLineChartView *)lineChartView shouldShowVerticalLineAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex;
+
+/**
+ *  Returns the width of the horizontal line to be drawn for a certain point of a certain line.
+ *  lineChartView:shouldShowVerticalLineAtHorizontalIndex:atLineIndex: must return YES for this line for it to be visible.
+ *
+ *  Default: 1 point
+ *
+ *  @param lineChartView    The line chart object requesting this information.
+ *  @param horizontalIndex  The 0-based horizontal index of a selection point (left to right, x-axis).
+ *  @param lineIndex        An index number identifying a line in the chart.
+ *
+ *  @return The width of the horizontal line to be drawn for this horizontal index of this line.
+ */
+- (CGFloat)lineChartView:(JBLineChartView *)lineChartView widthOfVerticalLineAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex;
+
+/**
+ *  Returns the color of the horizontal line to be drawn for a certain point of a certain line.
+ *  lineChartView:shouldShowVerticalLineAtHorizontalIndex:atLineIndex: must return YES for this line for it to be visible.
+ *
+ *  Default: Light gray color (via [UIColor lightGrayColor])
+ *
+ *  @param lineChartView    The line chart object requesting this information.
+ *  @param horizontalIndex  The 0-based horizontal index of a selection point (left to right, x-axis).
+ *  @param lineIndex        An index number identifying a line in the chart.
+ *
+ *  @return The color of the horizontal line to be drawn for this horizontal index of this line.
+ */
+- (UIColor *)lineChartView:(JBLineChartView *)lineChartView colorForVerticalLineAtHorizontalIndex:(NSUInteger)horizontalIndex atLineIndex:(NSUInteger)lineIndex;
+
+
+
 @end
 
 @interface JBLineChartView : JBChartView

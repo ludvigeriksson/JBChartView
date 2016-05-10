@@ -193,6 +193,7 @@ static NSInteger const kJBLineChartUnselectedLineIndex = -1;
 	dispatch_block_t createChartDataBlock = ^{
 		
 		CGFloat pointSpace = (self.bounds.size.width - (chartPadding * 2)) / ([self dataCount] - 1); // Space in between points
+        CGFloat customPointSpace = NAN;
 		CGFloat xOffset = chartPadding;
 		CGFloat yOffset = 0;
 		
@@ -218,9 +219,20 @@ static NSInteger const kJBLineChartUnselectedLineIndex = -1;
 						rawHeight = 0; //set to 0 so we can calculate the x position
 					}
 					
-					// Position
-					CGFloat normalizedHeight = [self padding] + [self normalizedHeightForRawHeight:rawHeight];
-					yOffset = mainViewRect.size.height - normalizedHeight;
+                    // x offset
+                    if ([self.delegate respondsToSelector:@selector(lineChartView:percentualSpacingBetweenPointsAtHorizontalIndex:atLineIndex:)])
+                    {
+                        CGFloat percentualSpacing = [self.delegate lineChartView:self
+                                 percentualSpacingBetweenPointsAtHorizontalIndex:horizontalIndex
+                                                                     atLineIndex:lineIndex];
+                        customPointSpace = (self.bounds.size.width - (chartPadding * 2)) * percentualSpacing;
+                        xOffset += customPointSpace;
+                    }
+                    // y offset
+                    CGFloat normalizedHeight = [self padding] + [self normalizedHeightForRawHeight:rawHeight];
+                    yOffset = mainViewRect.size.height - normalizedHeight;
+                    
+                    // Position
 					chartPointModel.position = CGPointMake(xOffset, yOffset);
 					
 					// Smoothed
@@ -246,10 +258,32 @@ static NSInteger const kJBLineChartUnselectedLineIndex = -1;
 					{
 						lineChartLine.fillColorStyle = [self.delegate lineChartView:self fillColorStyleForLineAtLineIndex:lineIndex];
 					}
+                    
+                    // Vertical lines
+                    chartPointModel.showsVerticalLine = NO;
+                    chartPointModel.verticalLineColor = [UIColor lightGrayColor];
+                    chartPointModel.verticalLineWidth = 1.0;
+                    if ([self.delegate respondsToSelector:@selector(lineChartView:shouldShowVerticalLineAtHorizontalIndex:atLineIndex:)]) {
+                        chartPointModel.showsVerticalLine = [self.delegate lineChartView:self
+                                                 shouldShowVerticalLineAtHorizontalIndex:horizontalIndex
+                                                                             atLineIndex:lineIndex];
+                    }
+                    if ([self.delegate respondsToSelector:@selector(lineChartView:colorForVerticalLineAtHorizontalIndex:atLineIndex:)]) {
+                        chartPointModel.verticalLineColor = [self.delegate lineChartView:self
+                                                   colorForVerticalLineAtHorizontalIndex:horizontalIndex
+                                                                             atLineIndex:lineIndex];
+                    }
+                    if ([self.delegate respondsToSelector:@selector(lineChartView:widthOfVerticalLineAtHorizontalIndex:atLineIndex:)]) {
+                        chartPointModel.verticalLineWidth = [self.delegate lineChartView:self
+                                                    widthOfVerticalLineAtHorizontalIndex:horizontalIndex
+                                                                             atLineIndex:lineIndex];
+                    }
 				}
 				lineChartLine.lineChartPoints = [lineChartLine.lineChartPoints arrayByAddingObject:chartPointModel];
-				
-				xOffset += pointSpace;
+
+                if (isnan(customPointSpace)) {
+                    xOffset += pointSpace;
+                }
 			}
 			[mutableLineChartLines addObject:lineChartLine];
 			xOffset = chartPadding;

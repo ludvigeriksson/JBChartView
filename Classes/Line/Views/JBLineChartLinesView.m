@@ -69,6 +69,20 @@ NSInteger const kJBLineChartLinesViewUnselectedLineIndex = -1;
 	{
 		JBLineChartLine *lineChartLine = [chartData objectAtIndex:lineIndex];
 		{
+            // Vertical lines
+            for (JBLineChartPoint *point in lineChartLine.lineChartPoints) {
+                if (point.showsVerticalLine) {
+                    UIBezierPath *path = [UIBezierPath bezierPath];
+                    
+                    [path moveToPoint:CGPointMake(point.position.x, 0)];
+                    [path addLineToPoint:CGPointMake(point.position.x, self.bounds.size.height)];
+                    
+                    path.lineWidth = point.verticalLineWidth;
+                    [point.verticalLineColor setStroke];
+                    [path stroke];
+                }
+            }
+            
 			UIBezierPath *linePath = [self bezierPathForLineChartLine:lineChartLine filled:NO];
 			UIBezierPath *fillPath = [self bezierPathForLineChartLine:lineChartLine filled:YES];
 			

@@ -18,6 +18,9 @@
 	if (self)
 	{
 		_position = CGPointZero;
+        _showsVerticalLine = NO;
+        _verticalLineColor = [UIColor lightGrayColor];
+        _verticalLineWidth = 1;
 	}
 	return self;
 }
